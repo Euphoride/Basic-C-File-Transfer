@@ -30,6 +30,16 @@ struct fileData readFile(const char* filename) {
     /* Open File */
     fp = fopen(filename, "r");
 
+    /* If file doesn't exist */
+    if (fp == NULL) {
+        fileData returnData;
+
+        /* Carry error message through fileSize */
+        returnData.fileSize = -1;
+
+        return returnData;
+    }
+
     /* Place file pointer at the end of the file */
     fseek(fp, 0, SEEK_END);
 
@@ -176,12 +186,19 @@ int clientFileSend(socketWrapper* sockWrap) {
     /* Read file */
     fileData = readFile(&filename[0]);
 
+    /* Check for errors */
+    if (fileData.fileSize == -1) {
+        return -3;
+    } else {
+        printf("[*] Found file\n");
+    }
+
     /* Send file data */
     sockWrap->failCheck = send(sockWrap->connectionSocket, fileData.ptr_fileData, fileData.fileSize, 0);
 
     /* Check for errors */
     if (sockWrap->failCheck == -1) {
-        return -3;
+        return -4;
     } else {
         printf("[*] Sent file data to client\n");
     }
@@ -191,7 +208,7 @@ int clientFileSend(socketWrapper* sockWrap) {
 
     /* Check for errors */
     if (sockWrap->failCheck == -1) {
-        return -4;
+        return -5;
     } else {
         printf("[*] Closing socket...\n");
         return 0;
