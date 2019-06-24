@@ -1,6 +1,7 @@
 # A Very Basic C File Transfer System
 
 **Current Functionality Rundown**
+<br>
 Server should bind to port 1337, and begins listening for connections. Client should then connect to port 1337 and request the file "server.c". The Server should look for, read and send the data which the Client should then recieve. The Client should then open a new file named "server.c" and write the data to it.
 
 <br>
