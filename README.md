@@ -106,7 +106,7 @@ Uses:
 |`struct sockaddr_in client`   | Not actually touched by the API itself, but data is copied into it when the main socket accepts a connection from the client. Contains client IP address and further details allowing for data to be sent back to the client |
 |`int connectionSocket`        | Socket that holds a connection with the client after the main socket accepts a connection. This frees the main socket to accept more connections if needed |
 |`int serverSocket`            | Main Socket, deals with binding itself as well as listening for and accepting connections |
-|`int failCheck`               | Used by the API to check for any errors, especially inter-functional errors |
+|`int failCheck`               | Used by the API to check for any errors, especially helpful for inter-functional errors |
 |`socklen_t socksize`          | Size of the structures that define server or client related data. Errors with such socket sizes can be seen if the server seems to be accepting multiple connections from "0.0.0.0". |
 
 
