@@ -20,7 +20,7 @@ void writeFile(const char* filename, const char* data, unsigned long fileSize) {
 
 int main() {
     /* Filename to download */
-    char filename[50] = "server.c";
+    char filename[50] = "stuff.txt";
 
     /* Socket Holder */
     int clientSocket       = 0;
@@ -70,7 +70,7 @@ int main() {
         return 0;
     }
 
-    printf("Uh: %s\n", recvDataBuffer);
+    printf("Command Recieved: %s\n", recvDataBuffer);
 
     if (strcmp(recvDataBuffer, "Send File Name") == 0) {
         failCheck = send(clientSocket, &filename[0], sizeof(filename) - 1, 0);
@@ -82,6 +82,9 @@ int main() {
             printf("Sent filename\n");
         }
 
+        /* Clear buffer */
+        memset(&recvDataBuffer, 0, sizeof(recvDataBuffer));
+
         /* Recieve Data */
         failCheck = recv(clientSocket, &recvDataBuffer, recvDataBufferSize, 0);
 
@@ -91,10 +94,13 @@ int main() {
             return 0;
         } else {
             printf("Recv'd file data: %s\n", recvDataBuffer);
+
+            if (strcmp(recvDataBuffer, "No File Found") == 0) {
+                printf("Error: File wasn't found\n");
+            } else {
+                writeFile(&filename[0], &recvDataBuffer[0], failCheck);
+            }
         }
-
-        writeFile(&filename[0], &recvDataBuffer[0], recvDataBufferSize);
-
     } else {
         printf("No send file command\n");
     }

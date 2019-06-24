@@ -174,7 +174,7 @@ int clientFileSend(socketWrapper* sockWrap) {
     if (sockWrap->failCheck == -1) {
         return -2;
     } else {
-        printf("[*] Recv'd filename\n");
+        printf("[*] Recv'd filename: %s\n", filename);
     }
 
     /* Null terminate the filename */
@@ -187,10 +187,21 @@ int clientFileSend(socketWrapper* sockWrap) {
     fileData = readFile(&filename[0]);
 
     /* Check for errors */
+    int fileExists = 1;
+
     if (fileData.fileSize == -1) {
-        return -3;
+        fileExists = 0;
+        printf("[-] Minimal Error: File does not exist\n");
     } else {
         printf("[*] Found file\n");
+    }
+
+    if (!fileExists) {
+        fileData.ptr_fileData = malloc(15);
+        fileData.fileSize = 15;
+
+        strcpy(fileData.ptr_fileData, "No File Found");
+        strcpy(&fileData.ptr_fileData[fileData.fileSize], "\0");
     }
 
     /* Send file data */
@@ -198,7 +209,7 @@ int clientFileSend(socketWrapper* sockWrap) {
 
     /* Check for errors */
     if (sockWrap->failCheck == -1) {
-        return -4;
+        return -3;
     } else {
         printf("[*] Sent file data to client\n");
     }
@@ -208,7 +219,7 @@ int clientFileSend(socketWrapper* sockWrap) {
 
     /* Check for errors */
     if (sockWrap->failCheck == -1) {
-        return -5;
+        return -4;
     } else {
         printf("[*] Closing socket...\n");
         return 0;

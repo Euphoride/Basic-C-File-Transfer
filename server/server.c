@@ -57,16 +57,17 @@ int main() {
             return 0;
 
         case -3:
-            printf("[-] File Reading Failed - File does not seem to exist\n");
-            return 0;
-
-        case -4:
             printf("[-] File data sending failed\n");
             return 0;
 
-        case -5:
+        case -4:
             printf("[-] Closing socket failed\n");
             return 0;
+
+        case -5:
+            printf("[-] File Reading Failed - File does not seem to exist\n");
+            return 0;
+
         default:
             break;
     }
