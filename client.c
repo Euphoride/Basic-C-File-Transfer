@@ -9,8 +9,6 @@
 #include <sys/types.h>
 
 void writeFile(const char* filename, const char* data, unsigned long fileSize) {
-    printf("beeep: %lu", fileSize);
-
     FILE *fp;
 
     fp = fopen(filename, "w");
@@ -74,7 +72,7 @@ int main() {
 
     printf("Uh: %s\n", recvDataBuffer);
 
-    if (strcmp(recvDataBuffer, "Send File") == 0) {
+    if (strcmp(recvDataBuffer, "Send File Name") == 0) {
         failCheck = send(clientSocket, &filename[0], sizeof(filename) - 1, 0);
 
         if (failCheck == -1) {
