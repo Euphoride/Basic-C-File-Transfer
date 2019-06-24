@@ -14,11 +14,10 @@ This function takes in a pre-initalised socketWrapper, and a port number, and do
 
 Returns:
 
-<br>
-| Error     | Details  |
-| :-------: | :-------------------------------------: |
-| -1        | Socket Initalisation Error |
-<br>
+| Error  | Details |
+| :-------------: | :-------------: |
+| -1  | Socket Initalisation Error  |
+
 
 ---
 
@@ -39,13 +38,13 @@ bringOnline(&socketWrapper, 1, (struct sockaddr*)&(socketWrapper.server)
 ```
 
 Returns:
-<br>
+
 | Error      | Details |
-| :--------: | :--------------------------------------------------------: |
+| :--------: | :---------------------------------------: |
 | -1         | Error with binding socket |
 | -2         | Error with listening initalisation |
 | -3         | Error with accepting incoming connections |
-<br>
+
 
 
 ---
@@ -57,14 +56,14 @@ This function should take in a post-connection socketWrapper. The socket wrapper
 This function then sends a request to the client to send the filename desired, where then the server finds the file and sends it back.
 
 Returns:
-<br>
+
 | Error | Details |
-| :-------: | :---------------------------------------------------------: |
-| -1 | Error with "Send File Name" command sending |
-| -2 | Error with Receiving filename |
-| -3 | Error with sending file data |
-| -4 | Error with closing client-connection socket |
-<br>
+| :---: | :---------------------------------------------------------: |
+| -1    | Error with "Send File Name" command sending |
+| -2    | Error with Receiving filename |
+| -3    | Error with sending file data |
+| -4    | Error with closing client-connection socket |
+
 
 
 ---
@@ -75,11 +74,11 @@ int bringOffline(socketWrapper* sockWrap)
 This function takes in a post-connection socketWrapper, and closes the main server socket within.
 
 Returns:
-<br>
+
 | Error | Details |
 | :--------: | :--------------------------------: |
 | -1 | Error with closing main socket |
-<br>
+
 ----
 
 **API - Server.h - Structures**
@@ -99,14 +98,14 @@ struct  socketWrapper {
 This structure is the main socketWrapper structure.
 
 Uses:
-<br>
+
 | Object | Details |
-| :---------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| `struct sockaddr_in server` | The main structure with server details. Contains current port, current family, current interface to bind to, etc. |
-|`struct sockaddr_in client` | Not actually touched by the API itself, but data is copied into it when the main socket accepts a connection from the client. Contains client IP address and further details allowing for data to be sent back to the client |
-|`int connectionSocket` | Socket that holds a connection with the client after the main socket accepts a connection. This frees the main socket to accept more connections if needed |
-|`int serverSocket` | Main Socket, deals with binding itself as well as listening for and accepting connections |
-|`int failCheck` | Used by the API to check for any errors, especially inter-functional errors |
-|`socklen_t socksize` | Size of the structures that define server or client related data. Errors with such socket sizes can be seen if the server seems to be accepting multiple connections from "0.0.0.0". |
-<br>
+| :--------: | :--------------------------------: |
+| `struct sockaddr_in server`  | The main structure with server details. Contains current port, current family, current interface to bind to, etc. |
+|`struct sockaddr_in client`   | Not actually touched by the API itself, but data is copied into it when the main socket accepts a connection from the client. Contains client IP address and further details allowing for data to be sent back to the client |
+|`int connectionSocket`        | Socket that holds a connection with the client after the main socket accepts a connection. This frees the main socket to accept more connections if needed |
+|`int serverSocket`            | Main Socket, deals with binding itself as well as listening for and accepting connections |
+|`int failCheck`               | Used by the API to check for any errors, especially inter-functional errors |
+|`socklen_t socksize`          | Size of the structures that define server or client related data. Errors with such socket sizes can be seen if the server seems to be accepting multiple connections from "0.0.0.0". |
+
 
