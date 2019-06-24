@@ -13,10 +13,11 @@ int  setupSocketWrapper(socketWrapper* sockWrap, int  portNum)
 This function takes in a pre-initalised socketWrapper, and a port number, and do most of the heavy lifting to set up the socket, and any details relating to the socket required to use the socket.
 
 Returns:
+
 <br>
-|Error|Details  |
-|:---:|:---:|
-| -1 | Socket Initalisation Error |
+| Error     | Details  |
+| :-------: | :-------------------------------------: |
+| -1        | Socket Initalisation Error |
 <br>
 
 ---
@@ -39,11 +40,11 @@ bringOnline(&socketWrapper, 1, (struct sockaddr*)&(socketWrapper.server)
 
 Returns:
 <br>
-| Error | Details |
-|:---:|:---:|
-| -1 | Error with binding socket |
-| -2 | Error with listening initalisation |
-| -3 | Error with accepting incoming connections |
+| Error      | Details |
+| :--------: | :--------------------------------------------------------: |
+| -1         | Error with binding socket |
+| -2         | Error with listening initalisation |
+| -3         | Error with accepting incoming connections |
 <br>
 
 
@@ -58,7 +59,7 @@ This function then sends a request to the client to send the filename desired, w
 Returns:
 <br>
 | Error | Details |
-|:---:|:---:|
+| :-------: | :---------------------------------------------------------: |
 | -1 | Error with "Send File Name" command sending |
 | -2 | Error with Receiving filename |
 | -3 | Error with sending file data |
@@ -76,7 +77,7 @@ This function takes in a post-connection socketWrapper, and closes the main serv
 Returns:
 <br>
 | Error | Details |
-|:---:|:---:|
+| :--------: | :--------------------------------: |
 | -1 | Error with closing main socket |
 <br>
 ----
@@ -100,7 +101,7 @@ This structure is the main socketWrapper structure.
 Uses:
 <br>
 | Object | Details |
-|:---:|:---:|
+| :---------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | `struct sockaddr_in server` | The main structure with server details. Contains current port, current family, current interface to bind to, etc. |
 |`struct sockaddr_in client` | Not actually touched by the API itself, but data is copied into it when the main socket accepts a connection from the client. Contains client IP address and further details allowing for data to be sent back to the client |
 |`int connectionSocket` | Socket that holds a connection with the client after the main socket accepts a connection. This frees the main socket to accept more connections if needed |
