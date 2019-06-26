@@ -1,104 +1,79 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <arpa/inet.h>
-
-#include <sys/socket.h>
-#include <sys/types.h>
-
-void writeFile(const char* filename, const char* data, unsigned long fileSize) {
-    FILE *fp;
-
-    fp = fopen(filename, "w");
-
-    fwrite(data, 1, fileSize, fp);
-
-    fclose(fp);
-}
+#include "client.h"
 
 int main() {
     /* Filename to download */
     char filename[50] = "stuff.txt";
 
-    /* Socket Holder */
-    int clientSocket       = 0;
-    int failCheck          = 0;
+    /* TODO: Socket Wrapper */
 
-    /* Recv'd Data buffer size */
-    int recvDataBufferSize = 4096;
+    /* Local Fail Check Initalization */
+    int failCheck = 0;
 
-    /* Character Buffer for Recieving data (+ 1 for null terminator) */
-    char recvDataBuffer[recvDataBufferSize + 1];
+    /* Socket Wrapper Structure Initalization */
+    socketWrapper sockWrapper;
 
-    /* C needs a struct with all the destination's details */
-    struct sockaddr_in destination;
+    /* Socket Wrapper Structure Setup */
+    failCheck = setupSocketWrapper(&sockWrapper);
 
-    /* Define a socket */
-    clientSocket = socket(PF_INET, SOCK_STREAM, 0);
-
-    /* Error checking */
-    if (clientSocket == -1) {
-        printf("Socket Creation Failed\n");
+    /* Error Checking */
+    if (failCheck == -1) {
+        printf("[-] Error with Socket Wrapper Initalization\n");
         return 0;
     }
 
-    /* Zero out the entire struct */
-    memset(&destination, 0, sizeof(destination));
-
-    /* Details */
-    destination.sin_addr.s_addr = inet_addr("127.0.0.1");
-    destination.sin_port        = htons(1337);
-    destination.sin_family      = AF_INET;
+    /* Socket Wrapper Destination Definition */
+    setupDestination(&sockWrapper, "127.0.0.1", 1337);
 
     /* Connect to server */
-    failCheck = connect(clientSocket, (const struct sockaddr*)&destination, sizeof(destination));
+    failCheck = connectToDestination(&sockWrapper);
 
     /* Error checking */
     if (failCheck == -1) {
-        printf("Connection Failed\n");
+        printf("[-] Connection Failed\n");
         return 0;
     }
 
     /* Recieve Data */
-    failCheck = recv(clientSocket, &recvDataBuffer[0], recvDataBufferSize + 1, 0);
+    failCheck = recieveData(&sockWrapper);
 
     /* Error checking */
     if (failCheck == -1) {
-        printf("Data Recv Failed\n");
+        printf("[-] Data Recv Failed\n");
         return 0;
     }
 
-    printf("Command Recieved: %s\n", recvDataBuffer);
+    /* Pull data */
+    char* data = pullData(&sockWrapper);
 
-    if (strcmp(recvDataBuffer, "Send File Name") == 0) {
-        failCheck = send(clientSocket, &filename[0], sizeof(filename) - 1, 0);
+    printf("Command Recieved: %s\n", sockWrapper.recvBuffer);
+
+    if (strcmp(data, "Send File Name") == 0) {
+        printf("CHECK DATA: %s", filename);
+        failCheck = sendData(&sockWrapper, filename, sizeof(filename));
 
         if (failCheck == -1) {
-            printf("Data Send Failed\n");
+            printf("[-] Data Send Failed\n");
             return 0;
         } else {
-            printf("Sent filename\n");
+            printf("[+] Sent filename\n");
         }
 
-        /* Clear buffer */
-        memset(&recvDataBuffer, 0, sizeof(recvDataBuffer));
-
         /* Recieve Data */
-        failCheck = recv(clientSocket, &recvDataBuffer, recvDataBufferSize, 0);
+        failCheck = recieveData(&sockWrapper);
 
         /* Error checking */
         if (failCheck == -1) {
-            printf("Data Recv Failed\n");
+            printf("[-] Data Recv Failed\n");
             return 0;
         } else {
-            printf("Recv'd file data: %s\n", recvDataBuffer);
+            /* Recieve file data */
+            data = pullData(&sockWrapper);
+            printf("[+] Recv'd file data: %s\n", data);
 
-            if (strcmp(recvDataBuffer, "No File Found") == 0) {
+            if (strcmp(data, "No File Found") == 0) {
                 printf("Error: File wasn't found\n");
             } else {
-                writeFile(&filename[0], &recvDataBuffer[0], failCheck);
+                writeFile(&filename[0], data, failCheck);
             }
         }
     } else {
@@ -106,7 +81,7 @@ int main() {
     }
 
     /* Close socket */
-    close(clientSocket);
+    bringClientOffline(&sockWrapper);
 
     return 0;
 }

@@ -1,5 +1,3 @@
-// TODO: try to fix binding error on line 115
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -174,7 +172,7 @@ int clientFileSend(socketWrapper* sockWrap) {
     if (sockWrap->failCheck == -1) {
         return -2;
     } else {
-        printf("[*] Recv'd filename: %s\n", filename);
+        printf("[*] Recv'd filename: %s // %d bytes\n", filename, sockWrap->failCheck);
     }
 
     /* Null terminate the filename */
