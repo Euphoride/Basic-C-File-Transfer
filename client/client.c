@@ -45,7 +45,7 @@ int main() {
     /* Pull data */
     char* data = pullData(&sockWrapper);
 
-    printf("Command Recieved: %s\n", sockWrapper.recvBuffer);
+    printf("Command Recieved: %s\n", data);
 
     if (strcmp(data, "Send File Name") == 0) {
         printf("CHECK DATA: %s", filename);
